@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign 7 </title>
+    <style>
+        button {
+            display: block;
+            margin-top: 10px;
+            padding: 5px;      
+        }
+        body{
+            width: fit-content;
+            height: fit-content;
+            padding: auto;
+            margin: auto;
+        }
+        canvas{
+            border :solid black;
+            border-radius: 10px;
+        }
+        div{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="320" height="240"></canvas>    
+<div class="grid">
+    <button id="Take-Pic">Take a pic</button>
+    <button id="Display-Time">Display Time</button>
+    <button id="invert" >Invert</button>
+    <button id="brightness" >Brightness</button>
+    <button id="sepia" >Sepia</button>
+    <button id="revert" >Revert</button>
+</div>
+<video id="video" width="320" height="240" autoplay></video>
+<script>
+
+    let video = document.querySelector("#video");
+    let Takeapic_button = document.querySelector("#Take-Pic");
+    let Displaytime_button = document.querySelector("#Display-Time");
+    let canvas = document.querySelector("#canvas");
+    let ctx = canvas.getContext('2d');
+    invertButton = document.getElementById('invert');
+    brightnessButton = document.getElementById('brightness');
+    sepiaButton = document.getElementById('sepia');
+    revertButton = document.getElementById('revert');
+      
+    async function Streaming() {
+    let stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = stream;
+        video.style.display = "none";
+          };
+        Streaming();
+    
+    let takeapic = false;
+        Takeapic_button.addEventListener('click', function () {
+        takeapic = true;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    let image = canvas.toDataURL('image/jpeg');
+        console.log(image);
+         });
+    
+    Displaytime_button.addEventListener('click', function () {
+        if (takeapic) {
+            let date = new Date().toLocaleString();
+                ctx.fillStyle = "#1729cf";
+                ctx.fillText(date, canvas.width / 1.5, canvas.height /1.05, 100);
+                takeapic = false;
+            }});
+    invertButton.addEventListener('click', () => { canvas.style.filter = "invert(100%)"; });
+    brightnessButton.addEventListener('click', () => { canvas.style.filter = "brightness(200%)"; });
+    sepiaButton.addEventListener('click', () => { canvas.style.filter = "sepia(100%)"; });
+    revertButton.addEventListener('click', () => { canvas.style.filter = "revert"; });
+    </script>
+    </body>
+    </html>
